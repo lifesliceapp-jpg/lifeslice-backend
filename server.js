@@ -1,9 +1,13 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Environment variables (set in Render dashboard)
+// Enable CORS (IMPORTANT)
+app.use(cors());
+
+// Environment variables (set in Render)
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
@@ -13,15 +17,18 @@ let accessToken = null;
 async function getAccessToken() {
   console.log("Getting new access token...");
 
+  const params = new URLSearchParams();
+  params.append("grant_type", "client_credentials");
+  params.append("scope", "basic");
+  params.append("client_id", CLIENT_ID);
+  params.append("client_secret", CLIENT_SECRET);
+
   const response = await fetch("https://oauth.fatsecret.com/connect/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      "Authorization":
-        "Basic " +
-        Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString("base64"),
     },
-    body: "grant_type=client_credentials&scope=basic",
+    body: params,
   });
 
   const data = await response.json();
@@ -29,7 +36,7 @@ async function getAccessToken() {
   console.log("Token response:", data);
 
   if (!data.access_token) {
-    throw new Error("Failed to get access token");
+    throw new Error(JSON.stringify(data));
   }
 
   accessToken = data.access_token;
@@ -82,9 +89,4 @@ app.get("/", (req, res) => {
 // 🚀 Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-});
-app.get("/get-ip", async (req, res) => {
-  const response = await fetch("https://api.ipify.org?format=json");
-  const data = await response.json();
-  res.json(data);
 });
