@@ -1,10 +1,9 @@
 const express = require("express");
-const fetch = require("node-fetch");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Environment variables (set in Render)
+// Environment variables (set in Render dashboard)
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
