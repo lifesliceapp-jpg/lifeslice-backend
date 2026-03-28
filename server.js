@@ -48,8 +48,11 @@ app.get("/api/food-search", async (req, res) => {
       })
     });
 
-    const data = await response.json();
-    res.json(data);
+   const data = await response.json();
+
+console.log("FatSecret response:", data);
+
+res.json(data);
 
   } catch (error) {
     console.error(error);
