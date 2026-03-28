@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enable CORS (IMPORTANT)
+// Enable CORS
 app.use(cors());
 
 // Environment variables (set in Render)
@@ -72,9 +72,13 @@ app.get("/api/food-search", async (req, res) => {
 
     const data = await response.json();
 
-    console.log("FatSecret response:", data);
+    console.log("FatSecret raw response:", data);
 
-    res.json(data);
+    // ✅ Normalize response for frontend
+    const foods = data.foods?.food || [];
+
+    res.json(foods);
+
   } catch (error) {
     console.error("FULL ERROR:", error);
     res.status(500).json({ error: error.message });
