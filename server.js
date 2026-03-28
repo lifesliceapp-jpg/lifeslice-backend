@@ -83,3 +83,8 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+app.get("/get-ip", async (req, res) => {
+  const response = await fetch("https://api.ipify.org?format=json");
+  const data = await response.json();
+  res.json(data);
+});
